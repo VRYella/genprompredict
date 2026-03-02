@@ -96,6 +96,10 @@ def show_upload() -> None:
         if key not in st.session_state:
             st.session_state[key] = default
 
+    # Apply pending sample-load request before any widget is instantiated
+    if st.session_state.pop("_load_sample", False):
+        st.session_state.sequence_input = SAMPLE_SEQUENCE
+
     # ── input section ─────────────────────────────────────────────────────────
     st.markdown(
         "<div class='info-card'>"
@@ -161,7 +165,7 @@ def show_upload() -> None:
         )
         if st.button("🔬 Load sample sequence", key="sample_btn", use_container_width=True):
             st.session_state.sequence = SAMPLE_SEQUENCE
-            st.session_state.sequence_input = SAMPLE_SEQUENCE
+            st.session_state["_load_sample"] = True
             st.rerun()
 
     # ── preview ───────────────────────────────────────────────────────────────
